@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WLED Christmas Control</title>
+  <script>
+    let isRed = true;
+
+    function toggleXmasLEDs() {
+      // Replace with your WLED device's IP address
+      const WLED_IP = '192.168.1.2';
+
+      // JSON payload for red or green
+      const payload = {
+        'seg': {
+          'id': 0,
+          'start': 0,
+          'stop': 10,
+          'col': isRed ? [[255, 0, 0]] : [[0, 255, 0]]
+        }
+      };
+
+      // Send POST request
+      fetch(`http://${WLED_IP}/json/state`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch((error) => console.error('Error:', error));
+
+      // Toggle color for next cycle
+      isRed = !isRed;
+    }
+
+    // Toggle LEDs every 2 seconds
+    setInterval(toggleXmasLEDs, 2000);
+  </script>
+</head>
+<body>
+
+  <h1>WLED Christmas Control</h1>
+  <button onclick="toggleXmasLEDs()">Start Christmas Pattern</button>
+
+</body>
+</html>
